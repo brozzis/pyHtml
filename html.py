@@ -69,6 +69,30 @@ class table:
         self.rendered = "<table>"+headers+body+"</table>"
         return self.rendered
 
+def cleandata(*args, **kwargs):
+    data = kwargs.get('data',[])
+    
+
+    new_ds = []
+    
+    avoid = ['id']
+
+    vals = {}
+    vals['nome'] = '<a href="/userid/{id}">{nome}</a>'
+
+    for i in data:
+        new_d = {}
+        for k, v in i.items():
+            if (k in avoid): continue
+
+            if (k in vals):
+                new_d[k] = vals[k].format(id=i['id'], nome=i['nome'])
+            else:
+                new_d[k] = v
+
+        new_ds.append(new_d[k])
+
+    return new_ds
 
 if __name__ == '__main__':
 
@@ -78,10 +102,16 @@ if __name__ == '__main__':
         { 'id': 3, 'nome': 'cristina' },
         { 'id': 4, 'nome': 'giuseppe' },
     ]
-    p = page(body="ciao").render()
-    t = table(data=d).render()
-    print(t)
-    print(p)
+
+    ds = cleandata(data=d)
+
+    print(ds)
+
+    def temp():
+        p = page(body="ciao").render()
+        t = table(data=d).render()
+        print(t)
+        print(p)
     
 
 
