@@ -69,13 +69,10 @@ class table:
         self.rendered = "<table>"+headers+body+"</table>"
         return self.rendered
 
-def cleandata(*args, **kwargs):
-    data = kwargs.get('data',[])
-    
 
-    new_ds = []
-    
-    avoid = ['id']
+
+def makeup(*args, **kwargs):
+    data = kwargs.get('data',[])
 
     vals = {}
     vals['nome'] = '<a href="/userid/{id}">{nome}</a>'
@@ -83,12 +80,31 @@ def cleandata(*args, **kwargs):
     for i in data:
         new_d = {}
         for k, v in i.items():
-            if (k in avoid): continue
 
             if (k in vals):
                 new_d[k] = vals[k].format(id=i['id'], nome=i['nome'])
             else:
                 new_d[k] = v
+
+        new_ds.append(new_d[k])
+
+    return new_ds
+
+
+def cleandata(*args, **kwargs):
+    data = kwargs.get('data',[])
+
+    new_ds = []
+    
+    avoid = ['id']
+
+
+    for i in data:
+        new_d = {}
+        for k, v in i.items():
+            if (k in avoid): continue
+
+            new_d[k] = v
 
         new_ds.append(new_d[k])
 
@@ -103,7 +119,8 @@ if __name__ == '__main__':
         { 'id': 4, 'nome': 'giuseppe' },
     ]
 
-    ds = cleandata(data=d)
+    ds = makeup(data=d)
+    ds = cleandata(data=ds)
 
     print(ds)
 
