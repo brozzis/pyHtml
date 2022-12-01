@@ -72,10 +72,14 @@ class table:
 
 
 def makeup(*args, **kwargs):
+    """
+    rielabora *applicativamente* i campi del dictionary
+    """
     data = kwargs.get('data',[])
 
     vals = {}
     vals['nome'] = '<a href="/userid/{id}">{nome}</a>'
+    new_ds = []
 
     for i in data:
         new_d = {}
@@ -86,18 +90,22 @@ def makeup(*args, **kwargs):
             else:
                 new_d[k] = v
 
-        new_ds.append(new_d[k])
+        new_ds.append(new_d)
 
     return new_ds
 
 
 def cleandata(*args, **kwargs):
+    """
+    pulisce i dati 
+        - considera avoid per scegliere se un campo deve non essere visualizzato
+    """
     data = kwargs.get('data',[])
+    avoid = kwargs.get('avoid',[])
+
+    if not avoid: return data
 
     new_ds = []
-    
-    avoid = ['id']
-
 
     for i in data:
         new_d = {}
@@ -106,7 +114,7 @@ def cleandata(*args, **kwargs):
 
             new_d[k] = v
 
-        new_ds.append(new_d[k])
+        new_ds.append(new_d)
 
     return new_ds
 
@@ -120,7 +128,10 @@ if __name__ == '__main__':
     ]
 
     ds = makeup(data=d)
-    ds = cleandata(data=ds)
+    print(ds)
+
+    avoid = ['id']
+    ds = cleandata(data=ds, avoid=avoid)
 
     print(ds)
 
